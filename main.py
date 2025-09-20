@@ -13,10 +13,15 @@ QML_IMPORT_MAJOR_VERSION = 1
 
 @QmlElement
 class Bridge(QObject):
+    query=""
+
+    @Slot(str, result=None)
+    def setQuery(self, newQuery):
+        self.query = newQuery
+
     @Slot()
     def searchYT(self):
-        query = "holo crimzon ruze"
-        videos = subprocess.run(['yt-dlp', f'ytsearch5:{query}', '--flat-playlist', '--print', '\"%(uploader)s|||%(title)s|||%(id)s\"'],capture_output=True, text=True)
+        videos = subprocess.run(['yt-dlp', f'ytsearch5:{self.query}', '--flat-playlist', '--print', '\"%(uploader)s|||%(title)s|||%(id)s\"'],capture_output=True, text=True)
 
         print(videos.stdout)
 

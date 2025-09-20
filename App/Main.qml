@@ -17,11 +17,27 @@ ApplicationWindow {
     }
 
     RowLayout {
-        Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+        // Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
         TextInput {
             id: searchBox
             font.pixelSize: 20
-            text: "Enter text"
+            text: ""
+            focus: true
+            onTextChanged: {
+                bridge.setQuery(text);
+            }
+            Text {
+                id: placeholderText
+                text: "Enter text here..."
+                color: "#aaaaaa"
+                font: searchBox.font
+                anchors.fill: parent
+                anchors.leftMargin: searchBox.leftPadding
+                anchors.topMargin: searchBox.topPadding
+                visible: !searchBox.text
+                verticalAlignment: searchBox.verticalAlignment
+                horizontalAlignment: searchBox.horizontalAlignment
+            }
         }
 
         Button {
