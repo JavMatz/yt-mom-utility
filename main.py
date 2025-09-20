@@ -21,7 +21,7 @@ class Bridge(QObject):
 
     @Slot()
     def searchYT(self):
-        videos = subprocess.run(['yt-dlp', f'ytsearch5:{self.query}', '--flat-playlist', '--print', '\"%(uploader)s|||%(title)s|||%(id)s\"'],capture_output=True, text=True)
+        videos = subprocess.run(['yt-dlp', f'ytsearch5:{self.query}', '--flat-playlist', '--print', '\"%(.{uploader,title,duration_string,id})j\"'], capture_output=True, text=True)
 
         print(videos.stdout)
 
