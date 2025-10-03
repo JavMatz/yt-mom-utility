@@ -11,6 +11,22 @@ ApplicationWindow {
     height: 400
     visible: true
 
+    ListModel {
+        id: testModel
+        ListElement {
+            name: "Bill Smith"
+            number: "555 3264"
+        }
+        ListElement {
+            name: "John Brown"
+            number: "555 8426"
+        }
+        ListElement {
+            name: "Sam Wise"
+            number: "555 0473"
+        }
+    }
+
     Bridge {
         id: bridge
     }
@@ -61,6 +77,17 @@ ApplicationWindow {
                 onClicked: {
                     bridge.searchYT();
                 }
+            }
+        }
+
+        ListView {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            model: testModel
+            delegate: Text {
+                required property string name
+                required property string number
+                text: name + ": " + number
             }
         }
     }
