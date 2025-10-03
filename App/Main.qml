@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.11
 import QtQuick.Controls 2.1
 import QtQuick.Window 2.1
 
-import io.qt.textproperties 1.0
+import io.qt.searchmodel 1.0
 
 ApplicationWindow {
     id: page
@@ -27,8 +27,8 @@ ApplicationWindow {
         }
     }
 
-    Bridge {
-        id: bridge
+    SearchModel {
+        id: searchModel
     }
 
     ColumnLayout {
@@ -50,7 +50,7 @@ ApplicationWindow {
                 text: ""
                 focus: true
                 onTextChanged: {
-                    bridge.setQuery(text);
+                    searchModel.setQuery(text);
                 }
                 Text {
                     id: placeholderText
@@ -75,7 +75,7 @@ ApplicationWindow {
                 Layout.topMargin: 10
                 Layout.rightMargin: 10
                 onClicked: {
-                    bridge.searchYT();
+                    searchModel.searchYT();
                 }
             }
         }
