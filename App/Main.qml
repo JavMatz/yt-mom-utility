@@ -7,10 +7,10 @@ import io.qt.searchmodel 1.0
 
 ApplicationWindow {
     id: page
-    width: 600
+    width: 700
     height: 400
-    minimumWidth: 600
-    maximumWidth: 600
+    minimumWidth: 700
+    maximumWidth: 700
     minimumHeight: 400
     maximumHeight: 400
     visible: true
@@ -45,7 +45,6 @@ ApplicationWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: searchBoxContainer.left
                     anchors.leftMargin: 5
-                    
                     font.pixelSize: 16
                     text: ""
                     focus: true
@@ -64,8 +63,6 @@ ApplicationWindow {
                         anchors.leftMargin: searchBox.leftPadding
                         anchors.topMargin: searchBox.topPadding
                         visible: !searchBox.text
-                        // verticalAlignment: searchBox.verticalAlignment
-                        // horizontalAlignment: searchBox.horizontalAlignment
                     }
                 }
             }
@@ -152,7 +149,12 @@ ApplicationWindow {
             }
 
             ListView {
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
+                anchors.topMargin: 10
+                anchors.bottomMargin: 10
                 id: searchResults
+                spacing: 3
                 anchors.fill: parent
                 model: searchModel
                 delegate: videoDelegate
