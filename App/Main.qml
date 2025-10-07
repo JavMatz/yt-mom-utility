@@ -94,14 +94,38 @@ ApplicationWindow {
             Component {
                 id: videoDelegate
                 RowLayout{
-                    Image {
-                        source: "placeholder.jpg"
+                    Rectangle {
                         width: 120
                         height: 90
+                        Image {
+                            anchors.fill: parent
+                            source: "placeholder.jpg"
+                        }
+
+                        Rectangle {
+                            color: "black"
+                            opacity: 0.70
+                            width: durationText.width + 2
+                            height: durationText.height + 2
+                            anchors.bottom: parent.bottom
+                            anchors.right: parent.right
+                            anchors.rightMargin: 3
+                            anchors.bottomMargin: 3
+                            radius: 3
+                            Text {
+                                id: durationText
+                                anchors.centerIn: parent
+                                color: "white"
+                                font.bold: true
+                                text: duration
+                            }
+                        }
                     }
+                    
                     ColumnLayout{
                         Text {
                             text: title
+                            font.bold: true
                         }
                         Text {
                             text: uploader
