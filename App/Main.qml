@@ -52,6 +52,9 @@ ApplicationWindow {
                     onTextChanged: {
                         searchModel.setQuery(text);
                     }
+                    onAccepted: {
+                        searchModel.searchYT();
+                    }
                     Text {
                         id: placeholderText
                         text: "Search video..."
