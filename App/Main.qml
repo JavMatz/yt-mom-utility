@@ -99,7 +99,7 @@ ApplicationWindow {
                         height: 90
                         Image {
                             anchors.fill: parent
-                            source: "placeholder.jpg"
+                            source: "https://img.youtube.com/vi/"+id+"/0.jpg"
                         }
 
                         Rectangle {
