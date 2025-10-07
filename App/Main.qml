@@ -46,7 +46,7 @@ ApplicationWindow {
                     anchors.left: searchBoxContainer.left
                     anchors.leftMargin: 5
                     font.pixelSize: 16
-                    // readOnly: searchModel._processingRequest
+                    enabled: !searchModel.processingRequest
                     text: ""
                     focus: true
                     onTextChanged: {
@@ -160,6 +160,9 @@ ApplicationWindow {
                 model: searchModel
                 delegate: videoDelegate
             }
+        }
+        ProgressBar {
+            indeterminate: searchModel.processingRequest
         }
     }
 }
