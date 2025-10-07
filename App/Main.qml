@@ -22,11 +22,11 @@ ApplicationWindow {
 
     ColumnLayout {
         id: column
-        spacing: 2
+        spacing: 10
         anchors.fill: parent
         RowLayout {
             id: searchRow
-            spacing: 2
+            spacing: 5
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop | Qt.AlignCenter
 
@@ -81,40 +81,56 @@ ApplicationWindow {
             }
         }
 
-        ListView {
-            id: searchResults
-            Layout.fillWidth: true
+        Rectangle {
+            Layout.leftMargin: 10
+            Layout.rightMargin: 10
+            Layout.bottomMargin:10
+            Layout.fillWidth: true 
             Layout.fillHeight: true
-            model: searchModel
-            delegate: RowLayout{
-                Image {
-                    source: "placeholder.jpg"
-                    width: 120
-                    height: 90
-                }
-                ColumnLayout{
-                    Text {
-                        text: title
+            border.color: "#000000"
+            border.width: 1
+            clip: true
+
+            Component {
+                id: videoDelegate
+                RowLayout{
+                    Image {
+                        source: "placeholder.jpg"
+                        width: 120
+                        height: 90
                     }
-                    Text {
-                        text: uploader
-                    }
-                    RowLayout{
-                        Button {
-                            text: "Download Audio"
-                            onClicked: {
-                                searchModel.downloadAudio(id);
-                            }
+                    ColumnLayout{
+                        Text {
+                            text: title
                         }
-                        Button {
-                            text: "Download Video"
-                            onClicked: {
-                                searchModel.downloadVideo(id);
+                        Text {
+                            text: uploader
+                        }
+                        RowLayout{
+                            Button {
+                                text: "Download Audio"
+                                onClicked: {
+                                    searchModel.downloadAudio(id);
+                                }
+                            }
+                            Button {
+                                text: "Download Video"
+                                onClicked: {
+                                    searchModel.downloadVideo(id);
+                                }
                             }
                         }
                     }
                 }
             }
+
+            ListView {
+                id: searchResults
+                anchors.fill: parent
+                model: searchModel
+                delegate: videoDelegate
+            }
         }
+        
     }
 }
