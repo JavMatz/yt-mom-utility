@@ -30,28 +30,40 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop | Qt.AlignCenter
 
-            TextInput {
-                id: searchBox
+            Rectangle {
+                id: searchBoxContainer
+                border.color: "#000000"
+                color: "#ffffff"
+                border.width: 1
+                height: 26
                 Layout.fillWidth: true
                 Layout.topMargin: 10
                 Layout.leftMargin: 10
-                font.pixelSize: 16
-                text: ""
-                focus: true
-                onTextChanged: {
-                    searchModel.setQuery(text);
-                }
-                Text {
-                    id: placeholderText
-                    text: "Search video"
-                    color: "#aaaaaa"
-                    font: searchBox.font
-                    anchors.fill: parent
-                    anchors.leftMargin: searchBox.leftPadding
-                    anchors.topMargin: searchBox.topPadding
-                    visible: !searchBox.text
-                    verticalAlignment: searchBox.verticalAlignment
-                    horizontalAlignment: searchBox.horizontalAlignment
+
+                TextInput {
+                    id: searchBox
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: searchBoxContainer.left
+                    anchors.leftMargin: 5
+                    
+                    font.pixelSize: 16
+                    text: ""
+                    focus: true
+                    onTextChanged: {
+                        searchModel.setQuery(text);
+                    }
+                    Text {
+                        id: placeholderText
+                        text: "Search video..."
+                        color: "#aaaaaa"
+                        font: searchBox.font
+                        anchors.fill: parent
+                        anchors.leftMargin: searchBox.leftPadding
+                        anchors.topMargin: searchBox.topPadding
+                        visible: !searchBox.text
+                        // verticalAlignment: searchBox.verticalAlignment
+                        // horizontalAlignment: searchBox.horizontalAlignment
+                    }
                 }
             }
 
@@ -76,7 +88,7 @@ ApplicationWindow {
             model: searchModel
             delegate: RowLayout{
                 Image {
-                    source: "placeholder.png"
+                    source: "placeholder.jpg"
                     width: 120
                     height: 90
                 }
