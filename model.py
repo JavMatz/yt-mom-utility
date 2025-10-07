@@ -78,9 +78,11 @@ class SearchModel(QAbstractListModel):
         subprocess.Popen(['yt-dlp', 
                           '-x', 
                           '--audio-format', 'mp3', 
-                          f'https://www.youtube.com/watch?v={video_id}'])
+                          f'https://www.youtube.com/watch?v={video_id}',
+                          '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s'])
         
     @Slot(str, result=None)
     def downloadVideo(self, video_id: str):
-        subprocess.run(['yt-dlp', 
+                          f'https://www.youtube.com/watch?v={video_id}',
+                          '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s'])
                           f'https://www.youtube.com/watch?v={video_id}'])
