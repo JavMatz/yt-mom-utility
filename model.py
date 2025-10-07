@@ -56,7 +56,7 @@ class SearchModel(QAbstractListModel):
     @Slot()
     def searchYT(self):
         videos = subprocess.run(['yt-dlp', 
-                                 f'ytsearch5:{self.query}', 
+                                 f'ytsearch10:{self.query}', 
                                  '--flat-playlist', 
                                  '--print', 
                                  '%(.{uploader,title,duration_string,id})j'], 
