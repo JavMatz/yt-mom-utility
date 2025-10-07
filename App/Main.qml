@@ -46,6 +46,7 @@ ApplicationWindow {
                     anchors.left: searchBoxContainer.left
                     anchors.leftMargin: 5
                     font.pixelSize: 16
+                    // readOnly: searchModel._processingRequest
                     text: ""
                     focus: true
                     onTextChanged: {
@@ -160,6 +161,5 @@ ApplicationWindow {
                 delegate: videoDelegate
             }
         }
-        
     }
 }

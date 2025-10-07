@@ -1,6 +1,6 @@
 import subprocess,json
 from typing import Any, Dict
-from PySide6.QtCore import QAbstractListModel, QByteArray, QModelIndex, QObject, QPersistentModelIndex, Qt, Slot
+from PySide6.QtCore import QAbstractListModel, QByteArray, QModelIndex, QPersistentModelIndex, Qt, Slot, Signal, Property
 from PySide6.QtQml import QmlElement
 
 QML_IMPORT_NAME = "io.qt.searchmodel"
@@ -12,11 +12,14 @@ class SearchModel(QAbstractListModel):
     TitleRole = Qt.ItemDataRole.UserRole + 2
     UploaderRole = Qt.ItemDataRole.UserRole +3
     DurationRole = Qt.ItemDataRole.UserRole +4
+    processingRequest = Signal()
 
     def __init__(self, parent= None) -> None:
         super().__init__(parent)
         self.query : str = ""
         self.videos : list[dict] = []
+        self.downloadLocation : str = "~/Downloads"
+        self._processingRequest : bool = False
     
     def rowCount(self, 
                  parent: QModelIndex | QPersistentModelIndex= QModelIndex())  -> int:
@@ -48,13 +51,24 @@ class SearchModel(QAbstractListModel):
         else:
             ret  = None
         return ret
+   
+    def getProcessingRequest(self):
+        return self._processingRequest
+    
+    def setProcessingRequest(self, value : bool):
+        self._processingRequest = value
+        self.processingRequest.emit()
+
+    processingSearch = Property(bool, fget=getProcessingRequest, fset=setProcessingRequest, notify=processingRequest)
     
     @Slot(str, result=None)
     def setQuery(self, newQuery):
         self.query = newQuery
-
+    
     @Slot()
     def searchYT(self):
+        self._processingRequest = True
+        self.processingRequest.emit()
         videos = subprocess.run(['yt-dlp', 
                                  f'ytsearch10:{self.query}', 
                                  '--flat-playlist', 
@@ -72,18 +86,28 @@ class SearchModel(QAbstractListModel):
         # Crucial!
         self.beginResetModel()
         self.videos = auxList 
-        self.endResetModel()   
+        self.endResetModel()
+        self._processingRequest = False
+        self.processingRequest.emit()
 
     @Slot(str, result=None)
     def downloadAudio(self, video_id: str):
+        self._processingRequest = True
+        self.processingRequest.emit()
         subprocess.Popen(['yt-dlp', 
                           '-x', 
                           '--audio-format', 'mp3', 
                           f'https://www.youtube.com/watch?v={video_id}',
                           '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s'])
+        self._processingRequest = False
+        self.processingRequest.emit()
         
     @Slot(str, result=None)
     def downloadVideo(self, video_id: str):
+        self._processingRequest = True
+        self.processingRequest.emit()
+        subprocess.run(['yt-dlp', 
                           f'https://www.youtube.com/watch?v={video_id}',
                           '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s'])
-                          f'https://www.youtube.com/watch?v={video_id}'])
+        self._processingRequest = False
+        self.processingRequest.emit()
