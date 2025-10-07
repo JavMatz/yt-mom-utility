@@ -10,6 +10,8 @@ QML_IMPORT_MAJOR_VERSION = 1
 class SearchModel(QAbstractListModel):
     IdRole = Qt.ItemDataRole.UserRole + 1
     TitleRole = Qt.ItemDataRole.UserRole + 2
+    UploaderRole = Qt.ItemDataRole.UserRole +3
+    DurationRole = Qt.ItemDataRole.UserRole +4
 
     def __init__(self, parent= None) -> None:
         super().__init__(parent)
@@ -24,6 +26,8 @@ class SearchModel(QAbstractListModel):
         default = super().roleNames()
         default[self.IdRole] = QByteArray(b'id')
         default[self.TitleRole] = QByteArray(b'title')
+        default[self.UploaderRole] = QByteArray(b'uploader')
+        default[self.DurationRole] = QByteArray(b'duration')
         return default
     
     def data(self, 
@@ -34,9 +38,13 @@ class SearchModel(QAbstractListModel):
         elif not index.isValid():
             ret = None
         elif role == self.IdRole:
-            ret = self.videos[index.row()]["title"]
-        elif role == self.TitleRole:
             ret = self.videos[index.row()]["id"]
+        elif role == self.TitleRole:
+            ret = self.videos[index.row()]["title"]
+        elif role == self.UploaderRole:
+            ret = self.videos[index.row()]["uploader"]
+        elif role == self.DurationRole:
+            ret = self.videos[index.row()]["duration_string"]
         else:
             ret  = None
         return ret
@@ -64,3 +72,15 @@ class SearchModel(QAbstractListModel):
         self.beginResetModel()
         self.videos = auxList 
         self.endResetModel()   
+
+    @Slot(str, result=None)
+    def downloadAudio(self, video_id: str):
+        subprocess.Popen(['yt-dlp', 
+                          '-x', 
+                          '--audio-format', 'mp3', 
+                          f'https://www.youtube.com/watch?v={video_id}'])
+        
+    @Slot(str, result=None)
+    def downloadVideo(self, video_id: str):
+        subprocess.run(['yt-dlp', 
+                          f'https://www.youtube.com/watch?v={video_id}'])

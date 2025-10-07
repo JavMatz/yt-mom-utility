@@ -74,8 +74,34 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
             model: searchModel
-            delegate: Text {
-                text: id + ": " + title
+            delegate: RowLayout{
+                Image {
+                    source: "placeholder.png"
+                    width: 120
+                    height: 90
+                }
+                ColumnLayout{
+                    Text {
+                        text: title
+                    }
+                    Text {
+                        text: uploader
+                    }
+                    RowLayout{
+                        Button {
+                            text: "Download Audio"
+                            onClicked: {
+                                searchModel.downloadAudio(id);
+                            }
+                        }
+                        Button {
+                            text: "Download Video"
+                            onClicked: {
+                                searchModel.downloadVideo(id);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
