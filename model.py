@@ -66,9 +66,8 @@ class SearchModel(QAbstractListModel):
 
         for line in videos.stdout.splitlines():
             video = json.loads(line)
-            if "duration_string" not in video:
-                video["duration_string"] = "N/A"
-            auxList.append(video)
+            if "duration_string" in video:
+                auxList.append(video)
 
         # Crucial!
         self.beginResetModel()
