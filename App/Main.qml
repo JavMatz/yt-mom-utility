@@ -7,9 +7,14 @@ import io.qt.searchmodel 1.0
 
 ApplicationWindow {
     id: page
-    width: 800
+    width: 600
     height: 400
+    minimumWidth: 600
+    maximumWidth: 600
+    minimumHeight: 400
+    maximumHeight: 400
     visible: true
+    title: "MOMYT Download"
 
     SearchModel {
         id: searchModel

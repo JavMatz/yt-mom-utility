@@ -10,6 +10,7 @@ from model import SearchModel
 if __name__ == '__main__':
 
     app = QGuiApplication(sys.argv)
+    app.setDesktopFileName("momyt")
     engine = QQmlApplicationEngine()
 
     engine.addImportPath(sys.path[0])
