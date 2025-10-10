@@ -86,19 +86,19 @@ class SearchModel(QAbstractListModel):
 
         if stderr:
             print(f'[Error] {stderr.decode()}')
-            return
+        elif stdout:
+            auxList = []
 
-        auxList = []
+            for line in stdout.splitlines():
+                video = json.loads(line)
+                if "duration_string" in video:
+                    auxList.append(video)
 
-        for line in stdout.splitlines():
-            video = json.loads(line)
-            if "duration_string" in video:
-                auxList.append(video)
+            # Crucial!
+            self.beginResetModel()
+            self.videos = auxList 
+            self.endResetModel()
 
-        # Crucial!
-        self.beginResetModel()
-        self.videos = auxList 
-        self.endResetModel()
         self._processingRequest = False
         self.processingRequestSignal.emit()
 
