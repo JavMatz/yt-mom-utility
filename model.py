@@ -1,6 +1,7 @@
-import subprocess,json
+import json, asyncio
 from typing import Any, Dict
 from PySide6.QtCore import QAbstractListModel, QByteArray, QModelIndex, QPersistentModelIndex, Qt, Slot, Signal, Property
+from qasync import asyncSlot
 from PySide6.QtQml import QmlElement
 
 QML_IMPORT_NAME = "io.qt.searchmodel"
@@ -66,13 +67,30 @@ class SearchModel(QAbstractListModel):
         if not self._processingRequest:
             self.query = newQuery
     
-    @Slot()
-    def searchYT(self):
+    @asyncSlot()
+    async def searchYT(self):
         self._processingRequest = True
         self.processingRequestSignal.emit()
+        
+        process = await asyncio.create_subprocess_exec(
+                'yt-dlp', 
+                f'ytsearch10:{self.query}', 
+                '--flat-playlist',
+                '--print',
+                '%(.{uploader,title,duration_string,id})j',
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+
+        stdout, stderr = await process.communicate()
+
+        if stderr:
+            print(f'[Error] {stderr.decode()}')
+            return
+
         auxList = []
 
-        for line in videos.stdout.splitlines():
+        for line in stdout.splitlines():
             video = json.loads(line)
             if "duration_string" in video:
                 auxList.append(video)
@@ -84,24 +102,44 @@ class SearchModel(QAbstractListModel):
         self._processingRequest = False
         self.processingRequestSignal.emit()
 
-    @Slot(str, result=None)
-    def downloadAudio(self, video_id: str):
+    @asyncSlot(str, result=None)
+    async def downloadAudio(self, video_id: str):
         self._processingRequest = True
         self.processingRequestSignal.emit()
-        subprocess.Popen(['yt-dlp', 
-                          '-x', 
-                          '--audio-format', 'mp3', 
-                          f'https://www.youtube.com/watch?v={video_id}',
-                          '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s'])
+        process = await asyncio.create_subprocess_exec(
+            'yt-dlp', 
+            '-x', 
+            '--audio-format', 'mp3', 
+            f'https://www.youtube.com/watch?v={video_id}',
+            '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s',
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        
+        _, stderr = await process.communicate()
+
+        if stderr:
+            print(f'[Error] {stderr.decode()}')
+
         self._processingRequest = False
         self.processingRequestSignal.emit()
         
-    @Slot(str, result=None)
-    def downloadVideo(self, video_id: str):
+    @asyncSlot(str, result=None)
+    async def downloadVideo(self, video_id: str):
         self._processingRequest = True
         self.processingRequestSignal.emit()
-        subprocess.run(['yt-dlp', 
-                          f'https://www.youtube.com/watch?v={video_id}',
-                          '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s'])
+        process = await asyncio.create_subprocess_exec(
+            'yt-dlp', 
+            f'https://www.youtube.com/watch?v={video_id}',
+            '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s',
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+
+        _, stderr = await process.communicate()
+
+        if stderr:
+            print(f'[Error] {stderr.decode()}')
+
         self._processingRequest = False
         self.processingRequestSignal.emit()
