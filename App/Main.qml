@@ -44,6 +44,7 @@ ApplicationWindow {
                     id: searchBox
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: searchBoxContainer.left
+                    anchors.right: searchBoxContainer.right
                     anchors.leftMargin: 5
                     font.pixelSize: 16
                     enabled: !searchModel.processingRequest
