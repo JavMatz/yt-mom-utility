@@ -134,7 +134,7 @@ class SearchModel(QAbstractListModel):
             '-x', 
             '--audio-format', 'mp3', 
             f'https://www.youtube.com/watch?v={video_id}',
-            '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s',
+            '-o', f'{self.downloadLocation}/%(uploader)s - %(title)s.%(ext)s',
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
@@ -158,7 +158,7 @@ class SearchModel(QAbstractListModel):
         process = await asyncio.create_subprocess_exec(
             'yt-dlp', 
             f'https://www.youtube.com/watch?v={video_id}',
-            '-o', f'{self.downloadLocation}/%(title)s - %(uploader)s.%(ext)s',
+            '-o', f'{self.downloadLocation}/%(uploader)s - %(title)s.%(ext)s',
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE
         )
