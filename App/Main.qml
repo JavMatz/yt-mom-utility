@@ -48,6 +48,7 @@ ApplicationWindow {
                     font.pixelSize: 16
                     enabled: !searchModel.processingRequest
                     text: ""
+                    color: searchModel.processingRequest ? "#aaaaaa" : "black"
                     focus: true
                     onTextChanged: {
                         searchModel.setQuery(text);
@@ -76,6 +77,7 @@ ApplicationWindow {
                 Layout.minimumWidth: 100
                 Layout.topMargin: 10
                 Layout.rightMargin: 10
+                enabled: !searchModel.processingRequest
                 onClicked: {
                     searchModel.searchYT();
                 }
@@ -134,12 +136,14 @@ ApplicationWindow {
                         RowLayout{
                             Button {
                                 text: "Download Audio"
+                                enabled: !searchModel.processingRequest
                                 onClicked: {
                                     searchModel.downloadAudio(id);
                                 }
                             }
                             Button {
                                 text: "Download Video"
+                                enabled: !searchModel.processingRequest
                                 onClicked: {
                                     searchModel.downloadVideo(id);
                                 }
