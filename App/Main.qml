@@ -68,6 +68,13 @@ ApplicationWindow {
                         visible: !searchBox.text
                     }
                 }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onDoubleClicked: {
+                        searchBox.selectAll();
+                    }
+                }
             }
 
             Button {
