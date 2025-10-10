@@ -22,11 +22,11 @@ ApplicationWindow {
 
     ColumnLayout {
         id: column
-        spacing: 10
         anchors.fill: parent
         RowLayout {
             id: searchRow
             spacing: 5
+            Layout.bottomMargin: 5
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop | Qt.AlignCenter
 
@@ -87,7 +87,7 @@ ApplicationWindow {
         Rectangle {
             Layout.leftMargin: 10
             Layout.rightMargin: 10
-            Layout.bottomMargin:10
+            Layout.bottomMargin: 5
             Layout.fillWidth: true 
             Layout.fillHeight: true
             border.color: "#000000"
@@ -165,8 +165,16 @@ ApplicationWindow {
                 delegate: videoDelegate
             }
         }
-        ProgressBar {
-            indeterminate: searchModel.processingRequest
+        RowLayout{
+            Layout.bottomMargin:5
+            Layout.leftMargin: 10
+            ProgressBar {
+                indeterminate: searchModel.processingRequest
+             }
+            Text {
+                id:statusText
+                text: searchModel.status
+            }
         }
     }
 }

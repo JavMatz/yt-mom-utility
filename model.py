@@ -14,6 +14,7 @@ class SearchModel(QAbstractListModel):
     UploaderRole = Qt.ItemDataRole.UserRole +3
     DurationRole = Qt.ItemDataRole.UserRole +4
     processingRequestSignal = Signal()
+    statusSignal = Signal()
 
     def __init__(self, parent= None) -> None:
         super().__init__(parent)
@@ -21,6 +22,7 @@ class SearchModel(QAbstractListModel):
         self.videos : list[dict] = []
         self.downloadLocation : str = "~/Downloads"
         self._processingRequest : bool = False
+        self._status : str = "Waiting..."
     
     def rowCount(self, 
                  parent: QModelIndex | QPersistentModelIndex= QModelIndex())  -> int:
@@ -53,6 +55,15 @@ class SearchModel(QAbstractListModel):
             ret  = None
         return ret
    
+    def getStatus(self):
+        return self._status
+    
+    def setStatus(self, value : str):
+        self._status = value
+        self.statusSignal.emit()
+
+    status = Property(str, fget=getStatus, fset=setStatus, notify=statusSignal)
+
     def getProcessingRequest(self):
         return self._processingRequest
     
@@ -71,11 +82,15 @@ class SearchModel(QAbstractListModel):
     async def searchYT(self):
         self._processingRequest = True
         self.processingRequestSignal.emit()
+
+        self._status = "Searching..."
+        self.statusSignal.emit()
         
         process = await asyncio.create_subprocess_exec(
                 'yt-dlp', 
                 f'ytsearch10:{self.query}', 
                 '--flat-playlist',
+                '-q',
                 '--print',
                 '%(.{uploader,title,duration_string,id})j',
             stdout=asyncio.subprocess.PIPE,
@@ -83,10 +98,16 @@ class SearchModel(QAbstractListModel):
         )
 
         stdout, stderr = await process.communicate()
+        # print(f'[Debug] stdout: {stdout}')
+        # print(f'[Debug] stderr: {stderr}')
 
         if stderr:
             print(f'[Error] {stderr.decode()}')
+            self._status = stdout.decode()
+            self.statusSignal.emit()
         elif stdout:
+            self._status = "Search completed."
+            self.statusSignal.emit()
             auxList = []
 
             for line in stdout.splitlines():
@@ -106,6 +127,8 @@ class SearchModel(QAbstractListModel):
     async def downloadAudio(self, video_id: str):
         self._processingRequest = True
         self.processingRequestSignal.emit()
+        self._status = "Downloading audio..."
+        self.statusSignal.emit()
         process = await asyncio.create_subprocess_exec(
             'yt-dlp', 
             '-x', 
@@ -123,11 +146,15 @@ class SearchModel(QAbstractListModel):
 
         self._processingRequest = False
         self.processingRequestSignal.emit()
+        self._status = "Download complete!"
+        self.statusSignal.emit()
         
     @asyncSlot(str, result=None)
     async def downloadVideo(self, video_id: str):
         self._processingRequest = True
         self.processingRequestSignal.emit()
+        self._status = "Downloading video..."
+        self.statusSignal.emit()
         process = await asyncio.create_subprocess_exec(
             'yt-dlp', 
             f'https://www.youtube.com/watch?v={video_id}',
@@ -143,3 +170,5 @@ class SearchModel(QAbstractListModel):
 
         self._processingRequest = False
         self.processingRequestSignal.emit()
+        self._status = "Download complete!"
+        self.statusSignal.emit()
