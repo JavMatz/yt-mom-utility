@@ -11,8 +11,8 @@ ApplicationWindow {
     height: 400
     minimumWidth: 700
     maximumWidth: 700
-    minimumHeight: 400
-    maximumHeight: 400
+    minimumHeight: 600
+    maximumHeight: 600
     visible: true
     title: "MOMYT Download"
 
