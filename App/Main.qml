@@ -73,6 +73,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     onDoubleClicked: {
                         searchBox.selectAll();
+                        searchBox.forceActiveFocus();
                     }
                 }
             }
