@@ -1,5 +1,6 @@
 import json, asyncio
 from typing import Any, Dict
+# from typing_extensions import override
 from PySide6.QtCore import QAbstractListModel, QByteArray, QModelIndex, QPersistentModelIndex, Qt, Slot, Signal, Property
 from qasync import asyncSlot
 from PySide6.QtQml import QmlElement
@@ -24,6 +25,7 @@ class SearchModel(QAbstractListModel):
         self._processingRequest : bool = False
         self._status : str = "Waiting..."
     
+    # @override
     def rowCount(self, 
                  parent: QModelIndex | QPersistentModelIndex= QModelIndex())  -> int:
         return len(self.videos)

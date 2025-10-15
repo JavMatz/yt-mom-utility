@@ -3,8 +3,7 @@ from __future__ import annotations
 import sys, asyncio
 
 from PySide6.QtGui import QGuiApplication
-from PySide6.QtQml import QQmlApplicationEngine, QmlElement
-from PySide6.QtQuickControls2 import QQuickStyle
+from PySide6.QtQml import QQmlApplicationEngine
 from qasync import QEventLoop
 from model import SearchModel
 
